@@ -1,4 +1,5 @@
 <script>
+import { getCurrentInstance } from "vue";
 export default {
   name: "flipped",
   inject: ["addFlippedElement", "addInvertedElement"],
@@ -22,10 +23,12 @@ export default {
       default: false
     }
   },
+  emits: ["on-start", "on-complete"],
   mounted() {
+    const instance = getCurrentInstance();
     if (this.flipId) {
       this.addFlippedElement({
-        element: this.$el,
+        element: instance.vnode.el,
         flipId: this.flipId,
         delayUntil: this.delayUntil,
         shouldFlip: this.shouldFlip,
@@ -39,8 +42,8 @@ export default {
       });
     } else if (this.inverseFlipId) {
       this.addInvertedElement({
-        element: this.$el,
-        parent: this.$parent.$el,
+        element: instance.vnode.el,
+        parent: instance.parent.vnode.el,
         opacity: this.opacity,
         scale: this.scale,
         translate: this.translate
@@ -48,7 +51,7 @@ export default {
     }
   },
   render() {
-    return this.$scopedSlots.default({});
+    return this.$slots.default()[0];
   }
 };
 </script>

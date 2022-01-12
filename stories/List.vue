@@ -7,7 +7,7 @@
       >shuffle</button>
       <ul class="list mt-4">
         <Flipped v-for="num in list" :key="num" :flip-id="num.toString()" :stagger="stagger">
-          <li>{{num}}</li>
+          <li>{{ num }}</li>
         </Flipped>
       </ul>
     </Flipper>

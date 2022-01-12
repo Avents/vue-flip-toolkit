@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <Flipper :flip-key="focused" :stagger-config="staggerConfig">
     <div class="m-4">
       <div v-for="(num, index) in list" :key="index">
@@ -40,6 +40,40 @@
       </div>
     </div>
   </Flipper>
+</template> -->
+
+<template>
+  <Flipper :flip-key="focused" :stagger-config="staggerConfig">
+    <div class="m-4">
+      <div v-for="(num, index) in list" :key="num.key">
+        <Flipped :flip-id="`${num.key}`" stagger="card" :should-invert="shouldFlip(index)">
+          <div
+            @click="toggleItem(index)"
+            role="button"
+            class="bg-grey my-4"
+            :class="isFocused(index) ? '' : 'text-center'"
+          >
+            <Flipped
+              :class="isFocused(index) ? 'min-h-4 p-4' : 'h-32 p-4'"
+              :inverse-flip-id="`${num.key}`"
+            >
+              <div>
+                <Flipped
+                  :delay-until="`${num.key}`"
+                  :should-flip="shouldFlip(index)"
+                  :flip-id="`avatar-${num.key}`"
+                >
+                  <div
+                    :class="isFocused(index) ? 'inline-block bg-grey-dark rounded-full w-3 h-3' : 'inline-block bg-grey-dark rounded-full w-12 h-12'"
+                  ></div>
+                </Flipped>
+              </div>
+            </Flipped>
+          </div>
+        </Flipped>
+      </div>
+    </div>
+  </Flipper>
 </template>
 
 <script>
@@ -59,14 +93,15 @@ export default {
         .fill()
         .map((_, i) => ({
           open: false,
-          label: `Card ${i + 1}`
+          label: `Card ${i + 1}`,
+          key: `card-${i + 1}`
         }))
     };
   },
   methods: {
     shouldFlip(index) {
       return (prev, current) => {
-        return index === prev || index === current;
+        return (index === prev || index === current);
       };
     },
     toggleItem(index) {
@@ -76,6 +111,9 @@ export default {
         this.focused = index;
       }
       this.list[index].open = !this.list[index].open;
+    },
+    isFocused(index) {
+      return index !== this.focused;
     }
   },
   computed: {
@@ -87,9 +125,6 @@ export default {
         }
       };
     },
-    key() {
-      return this.list.map(item => item.open.toString()).join("");
-    }
   }
 };
 </script>

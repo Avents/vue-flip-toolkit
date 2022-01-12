@@ -8,7 +8,7 @@
               class="mx-3"
               @click="setFocused(color)"
               role="button"
-              :style="{backgroundColor: color}"
+              :style="{ backgroundColor: color }"
             >
               <Flipped :inverse-flip-id="color">
                 <div class="square font-mono text-xs flex items-center justify-center text-white">
@@ -25,7 +25,7 @@
         <div
           @click="setFocused(focused)"
           class="full-screen-square flex flex-col"
-          :style="{backgroundColor: focused}"
+          :style="{ backgroundColor: focused }"
         >
           <Flipped :inverse-flip-id="focused">
             <div class="flex-auto">
@@ -36,7 +36,7 @@
               </div>
               <div class="opacity-grid flex-auto h-full">
                 <div
-                  :style="{backgroundColor: `rgba(0, 0, 0, ${index/40})`}"
+                  :style="{ backgroundColor: `rgba(0, 0, 0, ${index / 40})` }"
                   class="opacity-grid-square p-4"
                   v-for="(num, index) in Array(16)"
                   :key="num"

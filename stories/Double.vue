@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <Flipper :flip-key="key">
-      <Flipped :on-start="handleStart" flip-id="square" v-if="!open">
+      <Flipped @on-start="handleStart" flip-id="square" v-if="!open">
         <div class="square" @click="toggle"></div>
       </Flipped>
       <Flipped flip-id="square" v-else>

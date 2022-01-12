@@ -1,15 +1,15 @@
 import commonjs from "rollup-plugin-commonjs";
 import VuePlugin from "rollup-plugin-vue";
-import resolve from "rollup-plugin-node-resolve";
-import babel from "rollup-plugin-babel";
+import resolve from "@rollup/plugin-node-resolve";
 
 export default {
   input: "src/index.js",
   plugins: [
     commonjs(),
-    VuePlugin(),
     resolve(),
-    babel({ exclude: "node_modules/**" })
+    VuePlugin({
+      css: false,
+    })
   ],
   output: [
     {
@@ -29,4 +29,4 @@ export default {
       name: "VueFlipToolkit"
     }
   ]
-};
+}

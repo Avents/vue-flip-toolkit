@@ -100,7 +100,7 @@ export default {
         opacity: [0, 1],
         duration: 300,
         translateY: [10, 0],
-        complete: function() {
+        complete: function () {
           done();
         }
       });

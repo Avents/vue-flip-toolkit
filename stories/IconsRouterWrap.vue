@@ -1,7 +1,7 @@
 <template>
   <div>
     <Flipper :flip-key="key" stagger="gentle">
-      <router-view/>
+      <router-view />
     </Flipper>
   </div>
 </template>

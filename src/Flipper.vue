@@ -1,11 +1,7 @@
-<template>
-  <div :class="className">
-    <slot v-if="ready"></slot>
-  </div>
-</template>
-
 <script>
 import { Flipper } from "flip-toolkit";
+import { h } from 'vue'
+
 export default {
   name: "flipper",
   provide() {
@@ -93,6 +89,20 @@ export default {
         this.flipInstance.staggerConfig = newConfig;
       }
     }
+  },
+  render() {
+    return h('div',
+      {
+        class: this.className
+      },
+      {
+        default: () => {
+          if (this.ready) {
+            return this.$slots.default()
+          }
+        }
+      }
+    )
   }
 };
 </script>
