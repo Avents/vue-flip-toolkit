@@ -1,15 +1,9 @@
 <script>
 import { Flipper } from "flip-toolkit";
-import { h } from 'vue'
+import { h, onBeforeUpdate, onMounted, watch, nextTick, ref, provide } from 'vue'
 
 export default {
   name: "flipper",
-  provide() {
-    return {
-      addFlippedElement: this.addFlippedElement,
-      addInvertedElement: this.addInvertedElement
-    };
-  },
   props: {
     className: String,
     flipKey: [String, Number, Boolean],
@@ -19,14 +13,12 @@ export default {
       default: "noWobble"
     }
   },
-  data() {
-    return {
-      flipInstance: null,
-      ready: false
-    };
-  },
-  methods: {
-    addFlippedElement({
+  setup(props, { slots }) {
+
+    const flipInstance = ref(null)
+    const ready = ref(false)
+
+    const addFlippedElement = ({
       element,
       flipId,
       delayUntil,
@@ -38,8 +30,8 @@ export default {
       opacity,
       scale,
       translate
-    }) {
-      this.flipInstance.addFlipped({
+    }) => {
+      flipInstance.value.addFlipped({
         element,
         flipId,
         ...(delayUntil ? { delayUntil } : undefined),
@@ -52,57 +44,72 @@ export default {
         scale,
         translate
       });
-    },
-    addInvertedElement({ element, parent, opacity, scale, translate }) {
-      this.$nextTick(() => {
-        this.flipInstance.addInverted({
-          element,
-          parent,
-          opacity,
-          scale,
-          translate
-        });
+    }
+
+    const addInvertedElement = async ({ element, parent, opacity, scale, translate }) => {
+      await nextTick()
+      flipInstance.value.addInverted({
+        element,
+        parent,
+        opacity,
+        scale,
+        translate
       });
     }
-  },
-  mounted() {
-    this.flipInstance = new Flipper({
-      element: this.$el,
-      spring: this.spring,
-      ...(this.staggerConfig ? { staggerConfig: this.staggerConfig } : null)
-    });
-    this.ready = true;
-  },
-  beforeUpdate() {
-    this.flipInstance.recordBeforeUpdate();
-  },
-  watch: {
-    flipKey(newKey, oldKey) {
-      if (newKey !== oldKey) {
-        this.$nextTick(() => {
-          this.flipInstance.update(oldKey, newKey);
-        });
-      }
-    },
-    staggerConfig(oldConfig, newConfig) {
-      if (newConfig !== oldConfig) {
-        this.flipInstance.staggerConfig = newConfig;
-      }
-    }
-  },
-  render() {
-    return h('div',
-      {
-        class: this.className
-      },
-      {
-        default: () => {
-          if (this.ready) {
-            return this.$slots.default()
-          }
+
+    provide('addFlippedElement', addFlippedElement)
+    provide('addInvertedElement', addInvertedElement)
+
+    const rootEl = ref()
+
+    onMounted(() => {
+      console.log(rootEl.value)
+      flipInstance.value = new Flipper({
+        element: rootEl.value,
+        spring: props.spring,
+        ...(props.staggerConfig ? { staggerConfig: props.staggerConfig } : null)
+      });
+      ready.value = true;
+    })
+    onBeforeUpdate(() => {
+      flipInstance.value.recordBeforeUpdate();
+    })
+
+    watch(
+      () =>  props.flipKey,
+      async (newKey, oldKey) => {
+        if (newKey !== oldKey) {
+          await nextTick()
+          flipInstance.value.update(oldKey, newKey);
         }
       }
     )
-  }
+
+    watch(
+      () =>  props.staggerConfig,
+      (oldConfig, newConfig) => {
+        if (newConfig !== oldConfig) {
+          flipInstance.value.staggerConfig = newConfig;
+        }
+      }
+    )
+
+    return () => {
+      return h('div',
+        {
+          class: props.className,
+          ref: rootEl
+        },
+        {
+          default: () => {
+            if (ready.value) {
+              return slots.default()
+            }
+          }
+        }
+      )
+    }
+
+  },
 };
 </script>
