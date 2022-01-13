@@ -1,8 +1,7 @@
 <script>
-import { getCurrentInstance } from "vue";
+import { getCurrentInstance, onMounted, inject } from "vue";
 export default {
   name: "flipped",
-  inject: ["addFlippedElement", "addInvertedElement"],
   props: {
     flipId: String,
     inverseFlipId: String,
@@ -24,34 +23,37 @@ export default {
     }
   },
   emits: ["on-start", "on-complete"],
-  mounted() {
+  setup(props, { emit, slots }) {
+    const addFlippedElement = inject('addFlippedElement')
+    const addInvertedElement = inject('addInvertedElement')
+    onMounted(() => {
     const instance = getCurrentInstance();
-    if (this.flipId) {
-      this.addFlippedElement({
-        element: instance.vnode.el,
-        flipId: this.flipId,
-        delayUntil: this.delayUntil,
-        shouldFlip: this.shouldFlip,
-        shouldInvert: this.shouldInvert,
-        onStart: el => this.$emit("on-start", { el, id: this.flipId }),
-        onComplete: el => this.$emit("on-complete", { el, id: this.flipId }),
-        stagger: this.stagger,
-        opacity: this.opacity,
-        scale: this.scale,
-        translate: this.translate
-      });
-    } else if (this.inverseFlipId) {
-      this.addInvertedElement({
-        element: instance.vnode.el,
-        parent: instance.parent.vnode.el,
-        opacity: this.opacity,
-        scale: this.scale,
-        translate: this.translate
-      });
-    }
+      if (props.flipId) {
+        addFlippedElement({
+          element: instance.vnode.el,
+          flipId: props.flipId,
+          delayUntil: props.delayUntil,
+          shouldFlip: props.shouldFlip,
+          shouldInvert: props.shouldInvert,
+          onStart: el => emit("on-start", { el, id: props.flipId }),
+          onComplete: el => emit("on-complete", { el, id: props.flipId }),
+          stagger: props.stagger,
+          opacity: props.opacity,
+          scale: props.scale,
+          translate: props.translate
+        });
+      } else if (props.inverseFlipId) {
+        addInvertedElement({
+          element: instance.vnode.el,
+          parent: instance.parent.vnode.el,
+          opacity: props.opacity,
+          scale: props.scale,
+          translate: props.translate
+        });
+      }
+    })
+
+    return () => slots.default()[0]
   },
-  render() {
-    return this.$slots.default()[0];
-  }
 };
 </script>
