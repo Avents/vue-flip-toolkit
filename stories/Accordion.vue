@@ -64,7 +64,8 @@
                   :flip-id="`avatar-${num.key}`"
                 >
                   <div
-                    :class="isFocused(index) ? 'inline-block bg-grey-dark rounded-full w-3 h-3' : 'inline-block bg-grey-dark rounded-full w-12 h-12'"
+                    class="inline-block bg-grey-dark rounded-full"
+                    :class="isFocused(index) ? 'w-3 h-3' : 'w-12 h-12'"
                   ></div>
                 </Flipped>
               </div>

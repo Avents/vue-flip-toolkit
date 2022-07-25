@@ -34,9 +34,9 @@ import IconsRouterWrap from "./IconsRouterWrap.vue";
 //   .add("Example", () => IconsRouterWrap);
 
 storiesOf("Examples", module)
-  .addParameters({
-    backgrounds: [{ name: "grey", value: "#e6e6e6" }]
-  })
+  // .addParameters({
+  //   backgrounds: [{ name: "grey", value: "#e6e6e6" }]
+  // })
   .add("Expanding Div", () => {
     return {
       components: {

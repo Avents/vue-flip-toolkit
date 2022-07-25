@@ -1,6 +1,6 @@
 <script setup>
 import { Flipper } from "flip-toolkit";
-import { onBeforeUpdate, onMounted, watch, nextTick, ref, provide } from 'vue'
+import { onBeforeUpdate, onMounted, watch, nextTick, ref, provide } from '@vue/runtime-core'
 
 const props = defineProps({
   className: String,
@@ -60,11 +60,10 @@ provide('addInvertedElement', addInvertedElement)
 const rootEl = ref()
 
 onMounted(() => {
-  console.log(rootEl.value)
   flipInstance.value = new Flipper({
     element: rootEl.value,
     spring: props.spring,
-    ...(props.staggerConfig ? { staggerConfig: props.staggerConfig } : null)
+    staggerConfig: props.staggerConfig || null,
   });
   ready.value = true;
 })
@@ -93,7 +92,7 @@ watch(
 </script>
 
 <template>
-  <div ref="rootEl">
+  <div :class="props.className" ref="rootEl">
     <slot v-if="ready"></slot>
   </div>
 </template>

@@ -7,6 +7,7 @@
     <Flipper :flip-key="flipKey">
       <Flipped flip-id="square">
         <div class="square" :class="squareClass"></div>
+        <div class="square" :class="squareClass"></div>
       </Flipped>
     </Flipper>
   </div>
